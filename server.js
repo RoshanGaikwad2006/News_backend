@@ -22,9 +22,17 @@ app.use('/api/upload', uploadRouter);
 // Database connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/global-news-hub';
 
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+mongoose.connect(MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+})
+  .then(() => console.log('✅ MongoDB connected successfully to Atlas'))
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err.message);
+    if (err.message.includes('MongooseServerSelectionError')) {
+      console.error('👉 TIP: This is likely an IP Whitelist issue. Please check your MongoDB Atlas "Network Access" settings.');
+    }
+  });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
