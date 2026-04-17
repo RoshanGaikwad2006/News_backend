@@ -13,6 +13,10 @@ const articleSchema = new mongoose.Schema({
     en: { type: String },
     mr: { type: String }
   },
+  location: {
+    en: { type: String, default: 'Vinchur' },
+    mr: { type: String, default: 'विंचूर' }
+  },
   author: { type: String, required: true },
   authorImage: { type: String, default: '/images/writer_photo.png' },
   adImage: { type: String, default: '' },
